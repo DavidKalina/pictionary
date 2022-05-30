@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import useCanvas from '../../hooks/useCanvas'
 
 const Canvas = () => {
-  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const [{ x, y }, setPos] = useState({ x: 0, y: 0 })
   const [drawing, setDrawing] = useState(false)
+  const [pathId, setPathId] = useState(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   function handleMouseMove(event: any) {
@@ -14,13 +16,6 @@ const Canvas = () => {
       x: event.clientX - canvas.offsetLeft,
       y: event.clientY - canvas.offsetTop,
     })
-  }
-
-  function resizeCanvas() {
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
   }
 
   useEffect(() => {
@@ -37,11 +32,11 @@ const Canvas = () => {
       }
       ctx.lineWidth = 10
       ctx.lineCap = 'round'
-      ctx.lineTo(pos.x, pos.y)
+      ctx.lineTo(x, y)
       ctx.strokeStyle = 'red'
       ctx.stroke()
       ctx.beginPath()
-      ctx.moveTo(pos.x, pos.y)
+      ctx.moveTo(x, y)
     }
 
     function loop(t: any) {
@@ -55,7 +50,7 @@ const Canvas = () => {
       cancelAnimationFrame(frame)
       canvas.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [drawing, pos])
+  }, [drawing, x, y])
 
   useEffect(() => {
     const { current: canvas } = canvasRef
@@ -68,14 +63,24 @@ const Canvas = () => {
     canvas.height = canvas.offsetHeight
   }, [])
 
+  useEffect(() => {
+    if (drawing) {
+      setPathId(prev => prev + 1)
+    }
+  }, [drawing])
+
+  useCanvas(drawing, { pathId, x, y })
+
   return (
-    <canvas
-      className="border-4 border-blue-800"
-      ref={canvasRef}
-      onMouseMove={handleMouseMove}
-      onMouseDown={() => setDrawing(true)}
-      onMouseUp={() => setDrawing(false)}
-    />
+    <>
+      {pathId}
+      <canvas
+        ref={canvasRef}
+        onMouseMove={handleMouseMove}
+        onMouseDown={() => setDrawing(true)}
+        onMouseUp={() => setDrawing(false)}
+      />
+    </>
   )
 }
 
