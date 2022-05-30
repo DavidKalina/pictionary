@@ -5,12 +5,12 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div className="flex h-100vh">
-      <div className="border border-green-500 grow-[1]">Users List</div>
-      <div className="border border-green-500 grow-[8]">
+    <div className="h-screen w-screen flex items-center justify-center">
+      <div className="border h-full border-green-500 grow-[4]">Users List</div>
+      <div className="border h-full border-green-500 flexgrow-6]">
         <Canvas />
       </div>
-      <div className="border border-green-500 grow-[1]">Insane</div>
+      <div className="border h-full border-green-500 grow-[2]">Insane</div>
     </div>
   )
 }

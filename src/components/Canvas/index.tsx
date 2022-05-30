@@ -16,6 +16,13 @@ const Canvas = () => {
     })
   }
 
+  function resizeCanvas() {
+    canvas.style.width = '100%'
+    canvas.style.height = '100%'
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
+  }
+
   useEffect(() => {
     const { current: canvas } = canvasRef
 
@@ -55,15 +62,15 @@ const Canvas = () => {
 
     if (!canvas) return
 
-    canvas.style.width = '100%'
     canvas.style.height = '100%'
+    canvas.style.width = '100%'
     canvas.width = canvas.offsetWidth
     canvas.height = canvas.offsetHeight
   }, [])
 
   return (
     <canvas
-      className="border-4 border-blue-800 max-h-screen"
+      className="border-4 border-blue-800"
       ref={canvasRef}
       onMouseMove={handleMouseMove}
       onMouseDown={() => setDrawing(true)}
