@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+import socket from '../contexts/socket'
 
 export const useCanvas = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>) => {
   const [drawing, setDrawing] = useState(false)
@@ -11,7 +12,7 @@ export const useCanvas = (canvasRef: React.MutableRefObject<HTMLCanvasElement | 
 
       if (!canvas) return
 
-      setPos({
+      socket.emit('path', {
         x: event.clientX - canvas.offsetLeft,
         y: event.clientY - canvas.offsetTop,
       })
@@ -20,17 +21,26 @@ export const useCanvas = (canvasRef: React.MutableRefObject<HTMLCanvasElement | 
   )
 
   useEffect(() => {
+    socket.on('draw', ({ x, y }) => {
+      setPos({ x, y })
+    })
+  }, [])
+
+  useEffect(() => {
     const { current: canvas } = canvasRef
+
+    console.log(x, y, drawing)
 
     if (!canvas) return
     const ctx = canvasRef?.current?.getContext('2d') as CanvasRenderingContext2D
     let frame = requestAnimationFrame(loop)
 
     function draw() {
-      if (!drawing) {
-        ctx.beginPath()
-        return
-      }
+      //   if (!drawing) {
+      //     ctx.beginPath()
+      //     return
+      //   }
+
       ctx.lineWidth = 10
       ctx.lineCap = 'round'
       ctx.lineTo(x, y)

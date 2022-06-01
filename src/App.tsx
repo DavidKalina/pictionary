@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Canvas from './components/Canvas'
 import Toolbar from './components/Toolbar'
+import socket from './contexts/socket'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    socket.emit('insane')
+  }, [])
 
   return (
     <div className="h-screen w-screen flex items-center justify-center">
